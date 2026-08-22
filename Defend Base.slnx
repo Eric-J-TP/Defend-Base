@@ -3,5 +3,5 @@
     <Platform Name="x64" />
     <Platform Name="x86" />
   </Configurations>
-  <Project Path="Defend Base.vcxproj" />
+  <Project Path="Defend Base.vcxproj" Id="8ab5f282-93d5-4a9b-b676-e86d4c2063c9" />
 </Solution>
