@@ -225,7 +225,6 @@ int main()
 			if (event->is<sf::Event::Closed>())
 				window.close();
 		}
-		//Dodać teksture dla pocisku, zrobić jako vector, potem zeby się obracały, i nadtępnie dodać ddzwięk wystrzału i trafienia
 		
 
 
