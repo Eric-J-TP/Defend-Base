@@ -3,33 +3,22 @@
 #include <vector>
 #include <SFML/Graphics.hpp>
 #include <SFML/Audio.hpp>
+
+/*
+		---------
+Wykonał: Eric
+
+
+*/
+
+//--Files--
+#include "Classes/Map/Map.cpp"
+
+//----Classes-----
 std::vector<sf::Vector2f> positions;
 class AimingCross;
 class Bullet;
 
-//--Classes--
-class Map
-{
-public:
-	sf::Texture texture;
-	sf::Sprite sprite{ texture };
-	std::string file_path = "Classes/Map/textures/grass.png";
-	int height = 800, width = 600;
-
-	Map()
-	{
-		//load texture
-		if (texture.loadFromFile(file_path))
-			sprite.setTexture(texture);
-		else
-			std::cout << "Filed to load a image texture";
-		sprite.setTextureRect(sf::IntRect({ 0,0 }, { height,width }));
-	}
-	void setScale(float scale)
-	{
-		sprite.scale({ scale,scale });
-	}
-};
 class Player
 {
 public:
@@ -154,25 +143,35 @@ void startMainMusic(sf::Music& music)
 sf::Vector2f normalizeVector(sf::Vector2f& vector)
 {
 	float magnitude = sqrt(vector.x * vector.x + vector.y * vector.y); // Pitagoras jak cos ;)
-
 	sf::Vector2f normalizedVector;
-
 	normalizedVector.x = vector.x / magnitude;
 	normalizedVector.y = vector.y / magnitude;
-
 
 	return normalizedVector;
 }
 void shoot(Player& player, AimingCross& cross,Bullet& bullet, std::vector <Bullet>& bullets)
 {
-	
+	//jeśli jest kliknięty przycisk
 	if (sf::Mouse::isButtonPressed(sf::Mouse::Button::Left))
 	{
+		//tworzy obiekty
 		bullets.push_back(bullet);
 		positions.push_back(cross.sprite.getPosition());
 
+		//ustawia pozycje na pozycju gracza(bazy) 
 		int i = bullets.size() - 1;
 		bullets[i].sprite.setPosition(player.sprite.getPosition());
+
+		//obraca pocisk względem pozycji do której leci
+		float dx = 0.f, dy = 0.f;
+		dx = cross.sprite.getPosition().x - player.sprite.getPosition().x;
+		dy = cross.sprite.getPosition().y - player.sprite.getPosition().y;
+
+		float kat = std::atan2(dy, dx);
+		float stopnie = kat * (180.f / 3.14159);
+		
+		float degreesCorection = 90.f; // manual angle correction if the bullet needs to be facing right angle
+		bullets[i].sprite.setRotation(sf::degrees(stopnie + degreesCorection));
 	}
 
 	for (int i = 0; i < bullets.size(); i++)
@@ -180,7 +179,7 @@ void shoot(Player& player, AimingCross& cross,Bullet& bullet, std::vector <Bulle
 		sf::Vector2f bulletDir = positions[i] - bullets[i].sprite.getPosition();
 		bulletDir = normalizeVector(bulletDir);
 		bullets[i].sprite.setPosition(bullets[i].sprite.getPosition() + bulletDir * bullet.speed);
-
+		//długi if XD, króry robi ze pocisk znika jak dotrze do punktu i ta wartość musi byc zaokrąglona 
 		if (
 			sf::Vector2f({ 
 				std::round(bullets[i].sprite.getPosition().x), 
@@ -194,9 +193,6 @@ void shoot(Player& player, AimingCross& cross,Bullet& bullet, std::vector <Bulle
 			positions.erase(positions.begin() + i);
 		}
 	}
-
-
-
 }
 //-------------
 
@@ -216,7 +212,10 @@ int main()
 	base.setScale(8.f);
 	cross.setScale(5.f);
 
-	startMainMusic(mainMusic);
+	//----Start----
+	//startMainMusic(mainMusic);
+
+	//-------------
 
 	while (window.isOpen())
 	{
@@ -225,9 +224,6 @@ int main()
 			if (event->is<sf::Event::Closed>())
 				window.close();
 		}
-		
-
-
 
 		//--Machanics--
 		cross.move(window);
