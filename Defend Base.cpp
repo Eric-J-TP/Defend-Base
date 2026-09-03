@@ -82,6 +82,7 @@ void shoot(Player& player, AimingCross& cross,Bullet& bullet, std::vector <Bulle
 			explosion.sprite.setPosition(bullets[i].sprite.getPosition());
 			bullets.erase(bullets.begin() + i);
 			positions.erase(positions.begin() + i);
+			explosion.startAnimation();
 		}
 	}
 }

@@ -17,7 +17,7 @@ public:
 		else
 			std::cout << "Filed to load a image texture";
 		//set the scope view to sprite
-		sprite.setTextureRect(sf::IntRect({ 0,0 }, { height,width }));
+		sprite.setTextureRect(sf::IntRect({ 0,0 }, { width, height }));
 		//sets the position
 		sprite.setPosition(position);
 		//sets origin (the center)
