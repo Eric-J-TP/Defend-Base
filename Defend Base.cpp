@@ -18,6 +18,7 @@ Wykonał: Eric
 std::vector<sf::Vector2f> positions;
 class AimingCross;
 class Bullet;
+class Explosion;
 
 class Player
 {
@@ -27,7 +28,7 @@ public:
 	std::string file_path = "Classes/Player/textures/base.png";
 	int height = 10;
 	int width = 10;
-	sf::Vector2f position{ 400.f, 300.f};
+	sf::Vector2f position{ 400, 300.f};
 	sf::Vector2f origin{ 5.f,5.f };
 	Player()
 	{
@@ -51,7 +52,7 @@ public:
 	{
 		sprite.scale({ scale,scale });
 	}
-	friend void shoot(Player& player, AimingCross& cross, Bullet& bullet, std::vector <Bullet>& vec_bullet);
+	friend void shoot(Player& player, AimingCross& cross, Bullet& bullet, std::vector <Bullet>& vec_bullet, Explosion& explosion);
 
 };
 class AimingCross
@@ -95,7 +96,7 @@ public:
 
 		sprite.setPosition(worldPos); // Set the shape's position to match the mouse
 	}
-	friend void shoot(Player& player, AimingCross& corss, Bullet& bullet, std::vector <Bullet>& vec_bullet);
+	friend void shoot(Player& player, AimingCross& cross, Bullet& bullet, std::vector <Bullet>& vec_bullet, Explosion& explosion);
 };
 class Bullet
 {
@@ -130,7 +131,29 @@ public:
 	{
 		sprite.scale({ scale,scale });
 	}
-	friend void shoot(Player& player, AimingCross& cross,Bullet& bullet, std::vector <Bullet>& vec_bullet);
+	friend void shoot(Player& player, AimingCross& cross,Bullet& bullet, std::vector <Bullet>& vec_bullet,Explosion& explosion);
+};
+class Explosion
+{
+public:
+	sf::Texture texture;
+	sf::Sprite sprite{ texture };
+	std::string file_path = "Classes/Explosion/animation/explosion_2.gif";
+	int height = 100;
+	int width = 100;
+	sf::Vector2f origin { 50,95.f};
+
+	Explosion()
+	{
+		//load texture
+		if (texture.loadFromFile(file_path))
+			sprite.setTexture(texture);
+		else
+			std::cout << "Filed to load a image texture";
+		sprite.setTextureRect(sf::IntRect({ 0,0 }, { height,width }));
+		sprite.setOrigin(origin);
+	}
+	friend void shoot(Player& player, AimingCross& cross, Bullet& bullet, std::vector <Bullet>& vec_bullet, Explosion& explosion);
 };
 //-----------
 
@@ -149,7 +172,7 @@ sf::Vector2f normalizeVector(sf::Vector2f& vector)
 
 	return normalizedVector;
 }
-void shoot(Player& player, AimingCross& cross,Bullet& bullet, std::vector <Bullet>& bullets)
+void shoot(Player& player, AimingCross& cross,Bullet& bullet, std::vector <Bullet>& bullets, Explosion& explosion)
 {
 	//jeśli jest kliknięty przycisk
 	if (sf::Mouse::isButtonPressed(sf::Mouse::Button::Left))
@@ -189,6 +212,7 @@ void shoot(Player& player, AimingCross& cross,Bullet& bullet, std::vector <Bulle
 				std::round(positions[i].x), 
 				std::round(positions[i].y) })) 
 		{
+			explosion.sprite.setPosition(bullets[i].sprite.getPosition());
 			bullets.erase(bullets.begin() + i);
 			positions.erase(positions.begin() + i);
 		}
@@ -201,16 +225,19 @@ int main()
 	sf::RenderWindow window(sf::VideoMode({ 800,600 }), "Defend Base");
 	sf::Music mainMusic;
 	
-
+	int bulletTimer = 0;
 	//Objects
 	Player base;
 	Map map;
 	AimingCross cross;
 	Bullet bullet;
+	Explosion explosion;
 	std::vector <Bullet> vec_bullet;
 
 	base.setScale(8.f);
 	cross.setScale(5.f);
+	//explosion.sprite.setScale({2.f,2.f});
+	explosion.sprite.setPosition({ 300.f,300.f });
 
 	//----Start----
 	//startMainMusic(mainMusic);
@@ -227,16 +254,18 @@ int main()
 
 		//--Machanics--
 		cross.move(window);
-		shoot(base, cross, bullet, vec_bullet);
+		shoot(base, cross, bullet, vec_bullet,explosion);
 		//--------------------
 
 		window.setFramerateLimit(60);
 		window.clear(sf::Color::Black);
 		window.draw(map.sprite);
 		window.draw(base.getSprite());
-		for(int i=0; i<vec_bullet.size(); i++)
+		for (int i = 0; i < vec_bullet.size(); i++)
+		{
 			window.draw(vec_bullet[i].getSprite());
-
+		}
+		window.draw(explosion.sprite);
 		window.draw(cross.getSprite());
 		window.display();
 	}
