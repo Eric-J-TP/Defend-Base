@@ -6,156 +6,23 @@
 
 /*
 		---------
-Wykonał: Eric
+Wykonał: Eric Jastrzębski
 
 
 */
 
-//--Files--
-#include "Classes/Map/Map.cpp"
-
-//----Classes-----
-std::vector<sf::Vector2f> positions;
 class AimingCross;
 class Bullet;
 class Explosion;
 
-class Player
-{
-public:
-	sf::Texture texture;
-	sf::Sprite sprite{ texture };
-	std::string file_path = "Classes/Player/textures/base.png";
-	int height = 10;
-	int width = 10;
-	sf::Vector2f position{ 400, 300.f};
-	sf::Vector2f origin{ 5.f,5.f };
-	Player()
-	{
-		//load texture
-		if (texture.loadFromFile(file_path))
-			sprite.setTexture(texture);
-		else
-			std::cout << "Filed to load a image texture";
-		//set the scope view to sprite
-		sprite.setTextureRect(sf::IntRect({ 0,0 }, { height,width }));
-		//sets the position
-		sprite.setPosition(position);
-		//sets origin (the center)
-		sprite.setOrigin(origin);
-	}
-	sf::Sprite getSprite()
-	{
-		return sprite;
-	}
-	void setScale(float scale)
-	{
-		sprite.scale({ scale,scale });
-	}
-	friend void shoot(Player& player, AimingCross& cross, Bullet& bullet, std::vector <Bullet>& vec_bullet, Explosion& explosion);
+//----Classes-----
+#include "Classes/Map/Map.cpp"
+#include "Classes/Player/Player.cpp"
+#include "Classes/AimingCross/AimingCross.cpp"
+#include "Classes/Bullet/Bullet.cpp"
+#include "Classes/Explosion/Explosion.cpp"
 
-};
-class AimingCross
-{
-public:
-	sf::Texture texture;
-	sf::Sprite sprite{ texture };
-	std::string file_path = "Classes/AimingCross/textures/image.png";
-	int height = 10, width = 10;
-	sf::Vector2f position{ 100.f, 100.f };
-	sf::Vector2f origin{ 5.f, 5.f };
-	float stepSize = 5;
-
-	AimingCross()
-	{
-		//load texture
-		if (texture.loadFromFile(file_path))
-			sprite.setTexture(texture);
-		else
-			std::cout << "Filed to load a image texture";
-		//set the scope view to sprite
-		sprite.setTextureRect(sf::IntRect({ 0,0 }, { height,width }));
-		//sets the position
-		sprite.setPosition(position);
-		//sets origin (the center)
-		sprite.setOrigin(origin);
-	}
-	sf::Sprite getSprite()
-	{
-		return sprite;
-	}
-	void setScale(float scale)
-	{
-		sprite.scale({ scale,scale });
-	}
-	//moving mechanics
-	void move(sf::RenderWindow& window)
-	{
-		sf::Vector2i pixelPos = sf::Mouse::getPosition(window); // Get mouse pixel position relative to window
-		sf::Vector2f worldPos = window.mapPixelToCoords(pixelPos); // Convert to world coordinates (handles custom views/cameras)
-
-		sprite.setPosition(worldPos); // Set the shape's position to match the mouse
-	}
-	friend void shoot(Player& player, AimingCross& cross, Bullet& bullet, std::vector <Bullet>& vec_bullet, Explosion& explosion);
-};
-class Bullet
-{
-public:
-	sf::Texture texture;
-	sf::Sprite sprite{ texture };
-	std::string file_path = "Classes/Bullet/textures/image.png";
-	int height = 8, width = 20;
-	sf::Vector2f position{ 400.f, 300.f };
-	sf::Vector2f origin{ 5.f, 5.f };
-	float speed = 1.f;
-
-	Bullet()
-	{
-		//load texture
-		if (texture.loadFromFile(file_path))
-			sprite.setTexture(texture);
-		else
-			std::cout << "Filed to load a image texture";
-		//set the scope view to sprite
-		sprite.setTextureRect(sf::IntRect({ 0,0 }, { height,width }));
-		//sets the position
-		sprite.setPosition(position);
-		//sets origin (the center)
-		sprite.setOrigin(origin);
-	}
-	sf::Sprite getSprite()
-	{
-		return sprite;
-	}
-	void setScale(float scale)
-	{
-		sprite.scale({ scale,scale });
-	}
-	friend void shoot(Player& player, AimingCross& cross,Bullet& bullet, std::vector <Bullet>& vec_bullet,Explosion& explosion);
-};
-class Explosion
-{
-public:
-	sf::Texture texture;
-	sf::Sprite sprite{ texture };
-	std::string file_path = "Classes/Explosion/animation/explosion_2.gif";
-	int height = 100;
-	int width = 100;
-	sf::Vector2f origin { 50,95.f};
-
-	Explosion()
-	{
-		//load texture
-		if (texture.loadFromFile(file_path))
-			sprite.setTexture(texture);
-		else
-			std::cout << "Filed to load a image texture";
-		sprite.setTextureRect(sf::IntRect({ 0,0 }, { height,width }));
-		sprite.setOrigin(origin);
-	}
-	friend void shoot(Player& player, AimingCross& cross, Bullet& bullet, std::vector <Bullet>& vec_bullet, Explosion& explosion);
-};
-//-----------
+std::vector<sf::Vector2f> positions;
 
 //--Functions--
 void startMainMusic(sf::Music& music)
