@@ -3,7 +3,7 @@ class Map
 	public:
 		sf::Texture texture;
 		sf::Sprite sprite{ texture };
-		std::string file_path = "Classes/Map/textures/grass.png";
+		std::string file_path = "Classes/Map/textures/grass_2.png";
 		int height = 800, width = 600;
 	
 		Map()

@@ -3,11 +3,11 @@ class Player
 public:
 	sf::Texture texture;
 	sf::Sprite sprite{ texture };
-	std::string file_path = "Classes/Player/textures/base.png";
-	int height = 10;
-	int width = 10;
+	std::string file_path = "Classes/Player/textures/casle.png";
+	int height = 107;
+	int width = 50;
 	sf::Vector2f position{ 400, 300.f };
-	sf::Vector2f origin{ 5.f,5.f };
+	sf::Vector2f origin{ 20,50 };
 	Player()
 	{
 		//load texture
@@ -30,6 +30,6 @@ public:
 	{
 		sprite.scale({ scale,scale });
 	}
-	friend void shoot(Player& player, AimingCross& cross, Bullet& bullet, std::vector <Bullet>& vec_bullet, Explosion& explosion);
+	friend void shoot(Player& player, AimingCross& cross, Bullet& bullet, std::vector <Bullet>& vec_bullet, Explosion& explosion, sf::Window& window);
 
 };

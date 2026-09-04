@@ -22,6 +22,7 @@ class Explosion;
 #include "Classes/Bullet/Bullet.cpp"
 #include "Classes/Explosion/Explosion.cpp"
 
+int pom = 0; // dodanie delay do strzelania
 std::vector<sf::Vector2f> positions;
 
 //--Functions--
@@ -39,29 +40,33 @@ sf::Vector2f normalizeVector(sf::Vector2f& vector)
 
 	return normalizedVector;
 }
-void shoot(Player& player, AimingCross& cross,Bullet& bullet, std::vector <Bullet>& bullets, Explosion& explosion)
+void shoot(Player& player, AimingCross& cross,Bullet& bullet, std::vector <Bullet>& bullets, Explosion& explosion, sf::Window& window)
 {
 	//jeśli jest kliknięty przycisk
 	if (sf::Mouse::isButtonPressed(sf::Mouse::Button::Left))
 	{
-		//tworzy obiekty
-		bullets.push_back(bullet);
-		positions.push_back(cross.sprite.getPosition());
+		if (pom > 100)
+		{
+			pom = 0;
+			//tworzy obiekty
+			bullets.push_back(bullet);
+			positions.push_back(cross.sprite.getPosition());
 
-		//ustawia pozycje na pozycju gracza(bazy) 
-		int i = bullets.size() - 1;
-		bullets[i].sprite.setPosition(player.sprite.getPosition());
+			//ustawia pozycje na pozycju gracza(bazy) 
+			int i = bullets.size() - 1;
+			bullets[i].sprite.setPosition(player.sprite.getPosition());
 
-		//obraca pocisk względem pozycji do której leci
-		float dx = 0.f, dy = 0.f;
-		dx = cross.sprite.getPosition().x - player.sprite.getPosition().x;
-		dy = cross.sprite.getPosition().y - player.sprite.getPosition().y;
+			//obraca pocisk względem pozycji do której leci
+			float dx = 0.f, dy = 0.f;
+			dx = cross.sprite.getPosition().x - player.sprite.getPosition().x;
+			dy = cross.sprite.getPosition().y - player.sprite.getPosition().y;
 
-		float kat = std::atan2(dy, dx);
-		float stopnie = kat * (180.f / 3.14159);
-		
-		float degreesCorection = 90.f; // manual angle correction if the bullet needs to be facing right angle
-		bullets[i].sprite.setRotation(sf::degrees(stopnie + degreesCorection));
+			float kat = std::atan2(dy, dx);
+			float stopnie = kat * (180.f / 3.14159);
+
+			float degreesCorection = 90.f; // manual angle correction if the bullet needs to be facing right angle
+			bullets[i].sprite.setRotation(sf::degrees(stopnie + degreesCorection));
+		}
 	}
 
 	for (int i = 0; i < bullets.size(); i++)
@@ -82,7 +87,7 @@ void shoot(Player& player, AimingCross& cross,Bullet& bullet, std::vector <Bulle
 			explosion.sprite.setPosition(bullets[i].sprite.getPosition());
 			bullets.erase(bullets.begin() + i);
 			positions.erase(positions.begin() + i);
-			explosion.startAnimation();
+			explosion.actionFinished = false; // rozpoczyna animacje eksplozji
 		}
 	}
 }
@@ -102,7 +107,7 @@ int main()
 	Explosion explosion;
 	std::vector <Bullet> vec_bullet;
 
-	base.setScale(8.f);
+	//base.setScale(8.f);
 	cross.setScale(5.f);
 	//explosion.sprite.setScale({2.f,2.f});
 	explosion.sprite.setPosition({ 300.f,300.f });
@@ -122,7 +127,8 @@ int main()
 
 		//--Machanics--
 		cross.move(window);
-		shoot(base, cross, bullet, vec_bullet,explosion);
+		pom++;
+		shoot(base, cross, bullet, vec_bullet,explosion, window);
 		//--------------------
 
 		window.setFramerateLimit(60);
@@ -133,7 +139,11 @@ int main()
 		{
 			window.draw(vec_bullet[i].getSprite());
 		}
-		window.draw(explosion.sprite);
+		if (explosion.actionFinished == false)
+		{
+			explosion.startAnimation(window);
+			window.draw(explosion.sprite);
+		}
 		window.draw(cross.getSprite());
 		window.display();
 	}
