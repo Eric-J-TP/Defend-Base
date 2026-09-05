@@ -98,7 +98,7 @@ void shoot(Player& player, AimingCross& cross,Bullet& bullet, std::vector <Bulle
 	}
 }
 //-------------
-
+//xdxd
 int main()
 {
 	sf::RenderWindow window(sf::VideoMode({ 800,600 }), "Defend Base");

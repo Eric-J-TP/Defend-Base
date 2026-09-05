@@ -13,7 +13,7 @@ public:
 	bool actionFinished = false; // aby wiedziec kiedy sie skonczy animacja aby usunac sprite'a 
 	int xIndex = 100;
 	int yIndex = 0;
-
+	//xdxd
 	Explosion()
 	{
 		//load texture

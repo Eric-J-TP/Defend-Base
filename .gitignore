@@ -10,7 +10,7 @@
 # Dynamic libraries
 *.so
 *.dylib
-*.dll
+
 
 # Static libraries
 *.a
