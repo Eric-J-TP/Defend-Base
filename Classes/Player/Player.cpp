@@ -36,6 +36,8 @@ public:
 		if (music.openFromFile("sound/shooting.mp3"))
 			music.play();
 	}
-	friend void shoot(Player& player, AimingCross& cross, Bullet& bullet, std::vector <Bullet>& vec_bullet, Explosion& explosion, sf::Window& window);
+
+	//Metody przyjaźni
+	friend void shoot(Player& player, AimingCross& cross, Bullet& bullet, std::vector <Bullet>& vec_bullet, Explosion& explosion, sf::Window& window, Ant& ant);
 
 };

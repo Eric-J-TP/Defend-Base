@@ -8,7 +8,7 @@ public:
 	sf::Vector2f position{ 400.f, 300.f };
 	sf::Vector2f origin{ 5.f, 5.f };
 	float speed = 1.f;
-
+	bool OnGround = false;
 	Bullet()
 	{
 		//load texture
@@ -31,5 +31,11 @@ public:
 	{
 		sprite.scale({ scale,scale });
 	}
-	friend void shoot(Player& player, AimingCross& cross, Bullet& bullet, std::vector <Bullet>& vec_bullet, Explosion& explosion, sf::Window& window);
+	sf::FloatRect getHurtbox()
+	{
+		return sprite.getGlobalBounds();
+	}
+
+	// Mechanizmy Przyjaźni
+	friend void shoot(Player& player, AimingCross& cross, Bullet& bullet, std::vector <Bullet>& vec_bullet, Explosion& explosion, sf::Window& window, Ant& ant);
 };

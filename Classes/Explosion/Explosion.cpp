@@ -51,5 +51,5 @@ public:
 		if (music.openFromFile("sound/explosion.mp3"))
 			music.play();
 	}
-	friend void shoot(Player& player, AimingCross& cross, Bullet& bullet, std::vector <Bullet>& vec_bullet, Explosion& explosion, sf::Window& window);
+	friend void shoot(Player& player, AimingCross& cross, Bullet& bullet, std::vector <Bullet>& vec_bullet, Explosion& explosion, sf::Window& window, Ant& ant);
 };

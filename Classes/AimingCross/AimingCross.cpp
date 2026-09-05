@@ -39,5 +39,5 @@ public:
 
 		sprite.setPosition(worldPos); // Set the shape's position to match the mouse
 	}
-	friend void shoot(Player& player, AimingCross& cross, Bullet& bullet, std::vector <Bullet>& vec_bullet, Explosion& explosion, sf::Window& window);
+	friend void shoot(Player& player, AimingCross& cross, Bullet& bullet, std::vector <Bullet>& vec_bullet, Explosion& explosion, sf::Window& window, Ant& ant);
 };

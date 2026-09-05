@@ -1,6 +1,8 @@
 ﻿#include <iostream>
 #include <math.h>
 #include <vector>
+#include <cstdlib>
+#include <ctime>
 #include <SFML/Graphics.hpp>
 #include <SFML/Audio.hpp>
 
@@ -14,14 +16,14 @@ Wykonał: Eric Jastrzębski
 class AimingCross;
 class Bullet;
 class Explosion;
-
+class Ant;
 //----Classes-----
 #include "Classes/Map/Map.cpp"
 #include "Classes/Player/Player.cpp"
 #include "Classes/AimingCross/AimingCross.cpp"
 #include "Classes/Bullet/Bullet.cpp"
 #include "Classes/Explosion/Explosion.cpp"
-
+#include "Classes/Ant/Ant.cpp"
 int pom = 0; // dodanie delay do strzelania
 std::vector<sf::Vector2f> positions;
 sf::Music shootingMusic;
@@ -42,7 +44,20 @@ sf::Vector2f normalizeVector(sf::Vector2f& vector)
 
 	return normalizedVector;
 }
-void shoot(Player& player, AimingCross& cross,Bullet& bullet, std::vector <Bullet>& bullets, Explosion& explosion, sf::Window& window)
+void ChangeIfShootedAnt(Bullet& bullet, Ant& ant)
+{
+		if (bullet.getHurtbox().findIntersection(ant.sprite.getGlobalBounds()) && bullet.OnGround)
+		{
+			std::cout << "Trafiono\n";
+			ant.alive = false;
+			ant.randPosition();
+
+		}
+
+
+
+}
+void shoot(Player& player, AimingCross& cross,Bullet& bullet, std::vector <Bullet>& bullets, Explosion& explosion, sf::Window& window, Ant& ant)
 {
 	//jeśli jest kliknięty przycisk
 	if (sf::Mouse::isButtonPressed(sf::Mouse::Button::Left))
@@ -89,6 +104,11 @@ void shoot(Player& player, AimingCross& cross,Bullet& bullet, std::vector <Bulle
 				std::round(positions[i].x), 
 				std::round(positions[i].y) })) 
 		{
+			bullets[i].OnGround = true;
+
+			ChangeIfShootedAnt(bullets[i], ant);
+
+
 			explosion.sprite.setPosition(bullets[i].sprite.getPosition());
 			bullets.erase(bullets.begin() + i);
 			positions.erase(positions.begin() + i);
@@ -106,6 +126,7 @@ int main()
 	int bulletTimer = 0;
 	//Objects
 	Player base;
+	Ant ant;
 	Map map;
 	AimingCross cross;
 	Bullet bullet;
@@ -118,10 +139,11 @@ int main()
 	explosion.sprite.setPosition({ 300.f,300.f });
 
 	//----Start----
+	srand(time(NULL));
 	startMainMusic(mainMusic);
-
 	//-------------
-	//base.startSound(shootingMusic);
+
+
 	while (window.isOpen())
 	{
 		while (const std::optional event = window.pollEvent())
@@ -133,14 +155,16 @@ int main()
 		//--Machanics--
 		cross.move(window);
 		pom++;
-		shoot(base, cross, bullet, vec_bullet,explosion, window);
+		shoot(base, cross, bullet, vec_bullet,explosion, window, ant);
 		//--------------------
 
-		window.setFramerateLimit(60);
+		window.setFramerateLimit(120);
 		window.clear(sf::Color::Black);
 
 		window.draw(map.sprite);
 		window.draw(base.getSprite());
+		window.draw(ant.sprite);
+
 		for (int i = 0; i < vec_bullet.size(); i++)
 		{
 			window.draw(vec_bullet[i].getSprite());
