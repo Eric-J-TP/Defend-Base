@@ -30,6 +30,12 @@ public:
 	{
 		sprite.scale({ scale,scale });
 	}
+	void startSound(sf::Music& music)
+	{
+		
+		if (music.openFromFile("sound/shooting.mp3"))
+			music.play();
+	}
 	friend void shoot(Player& player, AimingCross& cross, Bullet& bullet, std::vector <Bullet>& vec_bullet, Explosion& explosion, sf::Window& window);
 
 };

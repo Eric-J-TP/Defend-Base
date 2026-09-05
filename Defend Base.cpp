@@ -24,11 +24,13 @@ class Explosion;
 
 int pom = 0; // dodanie delay do strzelania
 std::vector<sf::Vector2f> positions;
+sf::Music shootingMusic;
+sf::Music explosionMusic;
 
 //--Functions--
 void startMainMusic(sf::Music& music)
 {
-	if(music.openFromFile("sound/main_sound_2.mp3"))
+	if(music.openFromFile("sound/main_sound_3.mp3"))
 		music.play();
 }
 sf::Vector2f normalizeVector(sf::Vector2f& vector)
@@ -66,6 +68,9 @@ void shoot(Player& player, AimingCross& cross,Bullet& bullet, std::vector <Bulle
 
 			float degreesCorection = 90.f; // manual angle correction if the bullet needs to be facing right angle
 			bullets[i].sprite.setRotation(sf::degrees(stopnie + degreesCorection));
+
+			//odpala muzykę
+			player.startSound(shootingMusic);
 		}
 	}
 
@@ -87,6 +92,7 @@ void shoot(Player& player, AimingCross& cross,Bullet& bullet, std::vector <Bulle
 			explosion.sprite.setPosition(bullets[i].sprite.getPosition());
 			bullets.erase(bullets.begin() + i);
 			positions.erase(positions.begin() + i);
+			explosion.startSound(explosionMusic); // odpala muzyke
 			explosion.actionFinished = false; // rozpoczyna animacje eksplozji
 		}
 	}
@@ -97,7 +103,7 @@ int main()
 {
 	sf::RenderWindow window(sf::VideoMode({ 800,600 }), "Defend Base");
 	sf::Music mainMusic;
-	
+	sf::Music shootingMusic;
 	int bulletTimer = 0;
 	//Objects
 	Player base;
@@ -113,10 +119,10 @@ int main()
 	explosion.sprite.setPosition({ 300.f,300.f });
 
 	//----Start----
-	//startMainMusic(mainMusic);
+	startMainMusic(mainMusic);
 
 	//-------------
-
+	//base.startSound(shootingMusic);
 	while (window.isOpen())
 	{
 		while (const std::optional event = window.pollEvent())
@@ -133,6 +139,7 @@ int main()
 
 		window.setFramerateLimit(60);
 		window.clear(sf::Color::Black);
+
 		window.draw(map.sprite);
 		window.draw(base.getSprite());
 		for (int i = 0; i < vec_bullet.size(); i++)

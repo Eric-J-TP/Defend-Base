@@ -24,8 +24,6 @@ public:
 		sprite.setTextureRect(sf::IntRect({ 0,0 }, { width, height}));
 		sprite.setOrigin(origin);
 	}
-	friend void shoot(Player& player, AimingCross& cross, Bullet& bullet, std::vector <Bullet>& vec_bullet, Explosion& explosion, sf::Window& window);
-
 	void startAnimation(sf::Window& window)
 	{
 		//dodanie klatek do animacji, zrobionej jako zmiana scopa w zdjeciu (sprite'a sheeta)
@@ -47,4 +45,11 @@ public:
 
 		}
 	}
+	void startSound(sf::Music& music)
+	{
+
+		if (music.openFromFile("sound/explosion.mp3"))
+			music.play();
+	}
+	friend void shoot(Player& player, AimingCross& cross, Bullet& bullet, std::vector <Bullet>& vec_bullet, Explosion& explosion, sf::Window& window);
 };
