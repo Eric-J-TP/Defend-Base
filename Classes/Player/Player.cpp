@@ -3,7 +3,7 @@ class Player
 public:
 	sf::Texture texture;
 	sf::Sprite sprite{ texture };
-	std::string file_path = "Classes/Player/textures/casle.png";
+	std::string file_path = "Classes/Player/textures/a.png";
 	int height = 107;
 	int width = 50;
 	sf::Vector2f position{ 400, 300.f };
